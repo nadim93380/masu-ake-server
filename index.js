@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000
 
 // middleware
 app.use(cors())
-app.use(express())
+app.use(express.json())
 
 // masu-ake
 // WqLz4Fd7uYvDzWZy
@@ -25,15 +25,26 @@ const client = new MongoClient(uri, {
   }
 });
 
+const craftCollection = client.db("masuAkeDB").collection("craftDB");
+const categoryCollection = client.db("masuAkeDB").collection("categoryDB");
+
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-
-    app.post("/addCraft", (req, res) => {
-     const newCraft=req.body
-   })
+    app.post("/addCraft", async (req, res) => {
+      const newCraft = req.body
+      const result = await craftCollection.insertOne(newCraft)
+      res.send(result)
+    })
+    // Category Adding
+    app.post("/addCategory", async (req, res) => {
+      const newCraft = req.body
+      const result = await categoryCollection.insertOne(newCraft)
+      res.send(result)
+    })
 
 
     // Send a ping to confirm a successful connection
@@ -49,9 +60,9 @@ run().catch(console.dir);
 
 
 app.get("/", (req, res) => {
-    res.send("Coffee server is running")
+  res.send("Coffee server is running")
 })
 
 app.listen(port, () => {
-    console.log(`Server Running at port : ${port}`)
+  console.log(`Server Running at port : ${port}`)
 })
