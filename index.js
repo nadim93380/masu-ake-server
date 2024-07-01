@@ -77,6 +77,27 @@ async function run() {
       const result =await craftCollection.deleteOne(query);
       res.send(result)
     })
+    // Update a craft
+    app.put("/updateCraft/:id", async(req, res) => {
+      const craftId = req.params.id;
+      const filter = { _id: new ObjectId(craftId) };
+      const options = { upsert: false };
+      const updateValue = req.body
+      const updatedValue = {
+        $set:{
+            name:updateValue.name,
+            image:updateValue.image,
+            description:updateValue.description,
+            subCategory:updateValue.subCategory,
+            stock:updateValue.stock,
+            customization:updateValue.customization,
+            price:updateValue.price,
+            proccessingTime:updateValue.proccessingTime,
+        }
+    }
+    const result = await craftCollection.updateOne(filter,updatedValue,options)
+      res.send(result)
+    })
 
 
     // Category Adding
