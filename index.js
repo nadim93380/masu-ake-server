@@ -33,19 +33,35 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-
+    // Craft Posting
     app.post("/addCraft", async (req, res) => {
       const newCraft = req.body
       const result = await craftCollection.insertOne(newCraft)
       res.send(result)
     })
+    // Craft Getting
+    app.get("/allCraft", async (req, res) => {
+      const allCraft = await craftCollection.find().toArray();
+      res.send(allCraft)
+    })
+
+    // user craft getting
+    app.get("/userCraft/:email", async (req, res) => {
+      const UserEmail = req.params.email
+      console.log(`give data for ${UserEmail}`)
+      const filter = { email: UserEmail };
+      const result =await craftCollection.find(filter).toArray()
+      res.send(result)
+    })
+
+
     // Category Adding
     app.post("/addCategory", async (req, res) => {
       const newCraft = req.body
       const result = await categoryCollection.insertOne(newCraft)
       res.send(result)
     })
-
+    // Category Getting
     app.get("/categories", async (req, res) => {
       const allCatergory = await categoryCollection.find().toArray();
       res.send(allCatergory)
