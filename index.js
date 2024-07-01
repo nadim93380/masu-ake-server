@@ -61,6 +61,15 @@ async function run() {
       res.send(result)
     })
 
+    // Craft getting by subcategory
+    app.get("/catgoryCraft/:category", async (req, res) => {
+      const forCategory = req.params.category;
+      console.log(`give category for ${forCategory}`)
+      const filter = { subCategory: forCategory };
+      const result = await craftCollection.find(filter).toArray();
+      res.send(result)
+    })
+
     // delete a craft
     app.delete("/removeCraft/:id", async(req, res) => {
       const craftId = req.params.id;
