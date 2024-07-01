@@ -6,7 +6,10 @@ const app = express()
 const port = process.env.PORT || 5000
 
 // middleware
-app.use(cors())
+app.use(cors({
+  origin: ["http://localhost:5173", "https://masu-ake.netlify.app"],
+  credentials: true
+}));
 app.use(express.json())
 
 // masu-ake
@@ -32,7 +35,7 @@ const categoryCollection = client.db("masuAkeDB").collection("categoryDB");
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Craft Posting
     app.post("/addCraft", async (req, res) => {
       const newCraft = req.body
@@ -64,7 +67,6 @@ async function run() {
     // Craft getting by subcategory
     app.get("/catgoryCraft/:category", async (req, res) => {
       const forCategory = req.params.category;
-      console.log(`give category for ${forCategory}`)
       const filter = { subCategory: forCategory };
       const result = await craftCollection.find(filter).toArray();
       res.send(result)
@@ -114,7 +116,7 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
