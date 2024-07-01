@@ -53,12 +53,19 @@ async function run() {
       res.send(singleCraft)
     })
 
-    // user craft getting
+    // user all craft getting
     app.get("/userCraft/:email", async (req, res) => {
       const UserEmail = req.params.email
-      console.log(`give data for ${UserEmail}`)
       const filter = { email: UserEmail };
       const result =await craftCollection.find(filter).toArray()
+      res.send(result)
+    })
+
+    // delete a craft
+    app.delete("/removeCraft/:id", async(req, res) => {
+      const craftId = req.params.id;
+      const query = { _id: new ObjectId(craftId) };
+      const result =await craftCollection.deleteOne(query);
       res.send(result)
     })
 
